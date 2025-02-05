@@ -20,31 +20,31 @@ import org.openrewrite.Column;
 import org.openrewrite.DataTable;
 import org.openrewrite.Recipe;
 
-public class ClassHierarchyReport extends DataTable<ClassHierarchyReport.Row> {
+public class UnusedDependencyReport extends DataTable<UnusedDependencyReport.Row> {
 
-    public ClassHierarchyReport(Recipe recipe) {
+    public UnusedDependencyReport(Recipe recipe) {
         super(recipe,
-                "Class hierarchy report",
-                "Records inheritance relationships between classes.");
+                "Unused dependency report",
+                "Unused dependencies.");
     }
 
     @Value
     public static class Row {
-        @Column(displayName = "Class name",
-                description = "Fully qualified name of the class.")
-        String className;
+        @Column(displayName = "Dependency type",
+                description = "Type of dependency")
+        DependencyType dependencyType;
 
-        @Column(displayName = "Relationship",
-                description = "Whether the class implements a super interface or extends a superclass.")
-        Relationship relationship;
+        @Column(displayName = "GroupId",
+                description = "GroupId")
+        String groupId;
 
-        @Column(displayName = "Super class name",
-                description = "Fully qualified name of the superclass.")
-        String superClassName;
+        @Column(displayName = "ArtifactId",
+                description = "ArtifactId")
+        String artifactId;
     }
 
-    public enum Relationship {
-        EXTENDS,
-        IMPLEMENTS
+    public enum DependencyType {
+        MAVEN,
+        GRADLE
     }
 }

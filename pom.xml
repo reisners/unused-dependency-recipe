@@ -237,25 +237,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-                Only needed when you want to apply the OpenRewriteBestPractices recipe to your recipes through
-                ./mvnw rewrite:run -Drewrite.activeRecipes=org.openrewrite.recipes.OpenRewriteBestPractices
-            -->
-            <plugin>
-                <groupId>org.openrewrite.maven</groupId>
-                <artifactId>rewrite-maven-plugin</artifactId>
-                <version>5.46.1</version>
-                <configuration>
-                    <failOnDryRunResults>true</failOnDryRunResults>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.openrewrite.recipe</groupId>
-                        <artifactId>rewrite-migrate-java</artifactId>
-                        <version>2.31.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
 </project>

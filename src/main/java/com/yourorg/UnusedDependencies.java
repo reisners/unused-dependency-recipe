@@ -88,6 +88,7 @@ public class UnusedDependencies extends ScanningRecipe<UnusedDependencies.Accumu
                                     if (!acc.isInUse(javaProject, ga)) {
                                         System.out.println("Found unused maven dependency: " + ga);
                                         report.insertRow(ctx, new UnusedDependencyReport.Row(
+                                                javaProject.getProjectName(),
                                                 UnusedDependencyReport.DependencyType.MAVEN,
                                                 ga.getGroupId(),
                                                 ga.getArtifactId()));
@@ -105,6 +106,7 @@ public class UnusedDependencies extends ScanningRecipe<UnusedDependencies.Accumu
                             if (!acc.isInUse(javaProject, ga)) {
                                 System.out.println("Found unused gradle dependency: " + ga);
                                 report.insertRow(ctx, new UnusedDependencyReport.Row(
+                                        javaProject.getProjectName(),
                                         UnusedDependencyReport.DependencyType.GRADLE,
                                         ga.getGroupId(),
                                         ga.getArtifactId()));

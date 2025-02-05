@@ -30,6 +30,10 @@ public class UnusedDependencyReport extends DataTable<UnusedDependencyReport.Row
 
     @Value
     public static class Row {
+        @Column(displayName = "Project",
+                description = "Found in project")
+        String project;
+
         @Column(displayName = "Dependency type",
                 description = "Type of dependency")
         DependencyType dependencyType;

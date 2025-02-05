@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.marker.JavaSourceSet;
-import org.openrewrite.kotlin.Assertions;
 import org.openrewrite.kotlin.KotlinParser;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
@@ -37,7 +36,7 @@ import static org.openrewrite.kotlin.Assertions.kotlin;
 import static org.openrewrite.kotlin.Assertions.srcMainKotlin;
 import static org.openrewrite.maven.Assertions.pomXml;
 
-class UnusedDependenciesJavaTest implements RewriteTest {
+class UnusedDependenciesMavenTest implements RewriteTest {
 
     private final String[] artifactNames = {"guava", "slf4j-api", "commons-lang3"};
 
@@ -173,46 +172,4 @@ class UnusedDependenciesJavaTest implements RewriteTest {
         );
         assertThat(error.getMessage()).contains("No data table found");
     }
-
-    @Test
-    void shouldFindUnusedGradleDependencies() {
-        rewriteRun(
-          spec -> {
-              spec.beforeRecipe(withToolingApi());
-              spec.dataTable(UnusedDependencyReport.Row.class, rows -> {
-                  assertThat(rows).containsExactly(
-                    new UnusedDependencyReport.Row("project", GRADLE, "com.google.guava", "guava"),
-                    new UnusedDependencyReport.Row("project", GRADLE, "org.slf4j", "slf4j-api")
-                  );
-              });
-          },
-          mavenProject("project",
-            //language=groovy
-            buildGradle("""
-              plugins {
-                  id 'java'
-              }
-              repositories {
-                  mavenCentral()
-              }
-              dependencies {
-                  implementation 'com.google.guava:guava:33.3.1-jre'
-                  implementation 'org.slf4j:slf4j-api:2.0.16'
-              }
-              """)
-          ),
-          srcMainJava(
-            java(
-              //language=java
-              """
-                public class A {
-                    private String s;
-                }
-                """,
-              spec -> spec.markers(jssWithDependencies)
-            )
-          )
-        );
-    }
-
 }

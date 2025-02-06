@@ -53,11 +53,9 @@ class UnusedDependenciesMavenTest implements RewriteTest {
     @Test
     void shouldFindUnusedMavenDependencies() {
         rewriteRun(
-          spec -> spec.dataTable(UnusedDependencyReport.Row.class, rows -> {
-              assertThat(rows).containsExactly(
-                new UnusedDependencyReport.Row("project", MAVEN, "org.apache.commons", "commons-lang3")
-              );
-          }),
+          spec -> spec.dataTable(UnusedDependencyReport.Row.class, rows -> assertThat(rows).containsExactly(
+            new UnusedDependencyReport.Row("project", MAVEN, "org.apache.commons", "commons-lang3")
+          )),
           mavenProject("project",
             //language=XML
             pomXml("""
@@ -117,9 +115,7 @@ class UnusedDependenciesMavenTest implements RewriteTest {
           AssertionError.class,
           () -> rewriteRun(
             spec -> spec
-              .dataTable(UnusedDependencyReport.Row.class, rows -> {
-                  fail("should not occur");
-              }),
+              .dataTable(UnusedDependencyReport.Row.class, rows -> fail("should not occur")),
             mavenProject("project",
               //language=XML
               pomXml("""

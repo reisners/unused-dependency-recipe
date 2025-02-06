@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yourorg;
+package reisners.openrewrite;
 
-import com.yourorg.table.UnusedDependencyReport;
+import reisners.openrewrite.table.UnusedDependencyReport;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
@@ -24,7 +24,7 @@ import org.openrewrite.kotlin.KotlinParser;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 
-import static com.yourorg.table.UnusedDependencyReport.DependencyType.MAVEN;
+import static reisners.openrewrite.table.UnusedDependencyReport.DependencyType.MAVEN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;

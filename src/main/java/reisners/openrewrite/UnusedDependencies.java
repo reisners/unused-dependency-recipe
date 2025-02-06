@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yourorg;
+package reisners.openrewrite;
 
-import com.yourorg.table.UnusedDependencyReport;
+import reisners.openrewrite.table.UnusedDependencyReport;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.jspecify.annotations.Nullable;

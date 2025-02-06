@@ -29,10 +29,22 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
-          distribution: zulu
+          distribution: temurin
           java-version: 17
-      - uses: gradle/actions/setup-gradle@v4
+          cache: maven
+          server-id: ossrh
+          settings-path: ${{ github.workspace }}
+          server-username: SONATYPE_USERNAME
+          server-password: SONATYPE_PASSWORD
+          gpg-private-key: ${{ secrets.OSSRH_SIGNING_KEY }}
+          gpg-passphrase: SONATYPE_SIGNING_PASSWORD
       - name: build
-        run: ./gradlew ${{ env.GRADLE_SWITCHES }} build test
-      - name: verify
-        run: mvn --show-version --no-transfer-progress --update-snapshots --fail-at-end --batch-mode -Dstyle.color=always verify
+        run: ./mvnw --show-version --no-transfer-progress --update-snapshots clean verify --file=pom.xml --fail-at-end --batch-mode -Dstyle.color=always
+      - name: publish-snapshots
+        if: github.event_name != 'pull_request'
+        run: ./mvnw --show-version --no-transfer-progress --settings=${{ github.workspace }}/settings.xml --file=pom.xml --batch-mode -Dstyle.color=always --activate-profiles=sign-artifacts clean deploy -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SONATYPE_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          SONATYPE_SIGNING_PASSWORD: ${{ secrets.OSSRH_SIGNING_PASSWORD }}

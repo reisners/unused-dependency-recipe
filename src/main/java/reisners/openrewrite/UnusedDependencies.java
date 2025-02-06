@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yourorg;
+package reisners.openrewrite;
 
-import com.yourorg.table.UnusedDependencyReport;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.ScanningRecipe;
@@ -31,6 +31,7 @@ import org.openrewrite.java.marker.JavaSourceSet;
 import org.openrewrite.java.tree.JavaSourceFile;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.maven.tree.*;
+import reisners.openrewrite.table.UnusedDependencyReport;
 
 import java.util.*;
 
@@ -41,25 +42,25 @@ public class UnusedDependencies extends ScanningRecipe<UnusedDependencies.Accumu
     transient UnusedDependencyReport report = new UnusedDependencyReport(this);
 
     @Override
-    public String getDisplayName() {
+    public @NonNull String getDisplayName() {
         return "Find unused dependencies";
     }
 
     @Override
-    public String getDescription() {
+    public @NonNull String getDescription() {
         return "Scans through source code collecting references to types and methods, identifying dependencies in Maven or Gradle build files that are not used.";
     }
 
     @Override
-    public Accumulator getInitialValue(ExecutionContext ctx) {
+    public @NonNull Accumulator getInitialValue(@NonNull ExecutionContext ctx) {
         return new Accumulator();
     }
 
     @Override
-    public TreeVisitor<?, ExecutionContext> getScanner(Accumulator acc) {
+    public @NonNull TreeVisitor<?, ExecutionContext> getScanner(@NonNull Accumulator acc) {
         return new TreeVisitor<Tree, ExecutionContext>() {
             @Override
-            public @Nullable Tree visit(@Nullable Tree tree, ExecutionContext ctx) {
+            public @Nullable Tree visit(@Nullable Tree tree, @NonNull ExecutionContext ctx) {
                 if (tree instanceof JavaSourceFile) {
                     acc.recordTypesInUse((JavaSourceFile) tree);
                 }
@@ -69,10 +70,10 @@ public class UnusedDependencies extends ScanningRecipe<UnusedDependencies.Accumu
     }
 
     @Override
-    public TreeVisitor<?, ExecutionContext> getVisitor(Accumulator acc) {
+    public @NonNull TreeVisitor<?, ExecutionContext> getVisitor(@NonNull Accumulator acc) {
         return new TreeVisitor<Tree, ExecutionContext>() {
             @Override
-            public Tree visit(Tree tree, ExecutionContext ctx) {
+            public Tree visit(Tree tree, @NonNull ExecutionContext ctx) {
                 JavaProject javaProject = tree.getMarkers().findFirst(JavaProject.class).orElse(null);
                 if (javaProject == null) {
                     return tree;
@@ -86,7 +87,6 @@ public class UnusedDependencies extends ScanningRecipe<UnusedDependencies.Accumu
                                 dependency -> {
                                     GroupArtifact ga = dependency.getGav().asGroupArtifact();
                                     if (!acc.isInUse(javaProject, ga)) {
-                                        System.out.println("Found unused maven dependency: " + ga);
                                         report.insertRow(ctx, new UnusedDependencyReport.Row(
                                                 javaProject.getProjectName(),
                                                 UnusedDependencyReport.DependencyType.MAVEN,
@@ -104,7 +104,6 @@ public class UnusedDependencies extends ScanningRecipe<UnusedDependencies.Accumu
                         for (Dependency dependency : testRuntimeConfiguration.getRequested()) {
                             GroupArtifact ga = dependency.getGav().asGroupArtifact();
                             if (!acc.isInUse(javaProject, ga)) {
-                                System.out.println("Found unused gradle dependency: " + ga);
                                 report.insertRow(ctx, new UnusedDependencyReport.Row(
                                         javaProject.getProjectName(),
                                         UnusedDependencyReport.DependencyType.GRADLE,

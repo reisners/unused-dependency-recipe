@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.yourorg;
+package reisners.openrewrite;
 
-import com.yourorg.table.UnusedDependencyReport;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.java.Java17Parser;
 import org.openrewrite.java.JavaParser;
@@ -23,9 +22,8 @@ import org.openrewrite.java.marker.JavaSourceSet;
 import org.openrewrite.kotlin.KotlinParser;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
+import reisners.openrewrite.table.UnusedDependencyReport;
 
-import static com.yourorg.table.UnusedDependencyReport.DependencyType.GRADLE;
-import static com.yourorg.table.UnusedDependencyReport.DependencyType.MAVEN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,7 +32,7 @@ import static org.openrewrite.gradle.toolingapi.Assertions.withToolingApi;
 import static org.openrewrite.java.Assertions.*;
 import static org.openrewrite.kotlin.Assertions.kotlin;
 import static org.openrewrite.kotlin.Assertions.srcMainKotlin;
-import static org.openrewrite.maven.Assertions.pomXml;
+import static reisners.openrewrite.table.UnusedDependencyReport.DependencyType.GRADLE;
 
 class UnusedDependenciesGradleTest implements RewriteTest {
 
@@ -58,12 +56,10 @@ class UnusedDependenciesGradleTest implements RewriteTest {
         rewriteRun(
           spec -> {
               spec.beforeRecipe(withToolingApi());
-              spec.dataTable(UnusedDependencyReport.Row.class, rows -> {
-                  assertThat(rows).containsExactly(
-                    new UnusedDependencyReport.Row("project", GRADLE, "com.google.guava", "guava"),
-                    new UnusedDependencyReport.Row("project", GRADLE, "org.slf4j", "slf4j-api")
-                  );
-              });
+              spec.dataTable(UnusedDependencyReport.Row.class, rows -> assertThat(rows).containsExactly(
+                new UnusedDependencyReport.Row("project", GRADLE, "com.google.guava", "guava"),
+                new UnusedDependencyReport.Row("project", GRADLE, "org.slf4j", "slf4j-api")
+              ));
           },
           mavenProject("project",
             //language=groovy
@@ -100,9 +96,7 @@ class UnusedDependenciesGradleTest implements RewriteTest {
           AssertionError.class,
           () -> rewriteRun(
             spec -> spec
-              .dataTable(UnusedDependencyReport.Row.class, rows -> {
-                  fail("should not occur");
-              }),
+              .dataTable(UnusedDependencyReport.Row.class, rows -> fail("should not occur")),
             mavenProject("project",
               //language=groovy
               buildGradle("""

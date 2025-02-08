@@ -46,7 +46,7 @@ jobs:
 
       # Execute recipes
       - name: Apply OpenRewrite best practices
-        run: ./mvnw -U org.openrewrite.maven:rewrite-maven-plugin:6.0.3:run -Drewrite.activeRecipes=org.openrewrite.recipes.OpenRewriteBestPractices
+        run: ./mvnw --no-transfer-progress -U org.openrewrite.maven:rewrite-maven-plugin:6.0.3:run -Drewrite.activeRecipes=org.openrewrite.recipes.OpenRewriteBestPractices
 
       # Capture the diff
       - name: Create patch

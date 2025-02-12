@@ -11,7 +11,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <repository-owner>reisners</repository-owner>
-        <repository-name>unused-dependency-recipe</repository-name>
+        <repository-name>recipes</repository-name>
         <branch-name>main</branch-name>
         <github.global.server>github</github.global.server>
         <maven.compiler.source>8</maven.compiler.source>
@@ -273,7 +273,7 @@
         <repository>
             <id>${github.global.server}</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/reisners/unused-dependency-recipe</url>
+            <url>https://maven.pkg.github.com/reisners/recipes</url>
         </repository>
     </distributionManagement>
 </project>

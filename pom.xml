@@ -273,7 +273,7 @@
         <repository>
             <id>${github.global.server}</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/reisners/unused-dependency-recipe</url>
+            <url>https://maven.pkg.github.com/reisners/recipes</url>
         </repository>
     </distributionManagement>
 </project>
